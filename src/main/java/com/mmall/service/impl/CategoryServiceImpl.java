@@ -64,15 +64,15 @@ public class CategoryServiceImpl implements ICategoryService {
 
     /**
      * 递归查询本结点的id和子节点的id
+     *
      * @param categoryId
      * @return
      */
-    public ServerResponse selectCategoryAndChildrenById(Integer categoryId) {
+    public ServerResponse<List<Integer>> selectCategoryAndChildrenById(Integer categoryId) {
         Set<Category> categorySet = Sets.newHashSet();
         findChildCategory(categorySet, categoryId);
-
         List<Integer> list = Lists.newArrayList();
-        if(categoryId != null){
+        if (categoryId != null) {
             for (Category category : categorySet) {
                 list.add(category.getId());
             }
@@ -87,8 +87,10 @@ public class CategoryServiceImpl implements ICategoryService {
             categorySet.add(category);
         }
         List<Category> categoryList = categoryMapper.selectCategoryChildrenByParentId(categoryId);
-        //todo 如果categoryList没数据会发生什么结果？？
+        System.out.println(categoryList.size());
+        //由于mybatis返回，如果没有取到数据categoryList也不会为空，但是也不会进去下面的遍历
         for (Category categoryItem : categoryList) {
+            System.out.println("进来了吗？");
             findChildCategory(categorySet, categoryItem.getId());
         }
         return categorySet;

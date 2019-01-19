@@ -14,6 +14,8 @@ public class PropertiesUtil {
 
     private static Properties props;
 
+
+    //静态代码块，类加载时首先执行
     static {
         String fileName = "mmall.properties";
         props = new Properties();
