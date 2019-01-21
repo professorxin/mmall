@@ -45,6 +45,7 @@ public class FTPUtil {
         //连接ftp服务器
         if (connectServer(this.ip, this.port, this.user, this.pwd)) {
             try {
+                System.out.println(ftpClient);
                 ftpClient.changeWorkingDirectory(remotePath);
                 ftpClient.setBufferSize(1024);
                 ftpClient.setControlEncoding("UTF-8");
@@ -69,7 +70,7 @@ public class FTPUtil {
 
     private boolean connectServer(String ip, int port, String user, String pass) {
         boolean isSuccess = false;
-        FTPClient ftpClient = new FTPClient();
+        ftpClient = new FTPClient();
         try {
             ftpClient.connect(ip);
             isSuccess = ftpClient.login(user, pass);

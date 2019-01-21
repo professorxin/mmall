@@ -89,7 +89,7 @@ public class ProductManageController {
      * @param productId
      * @return
      */
-    @RequestMapping("get_detail.do")
+    @RequestMapping("detail.do")
     @ResponseBody
     public ServerResponse getDetail(HttpSession session, Integer productId) {
         User user = (User) session.getAttribute(Const.CURRENT_USER);
