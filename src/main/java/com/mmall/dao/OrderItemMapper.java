@@ -19,4 +19,10 @@ public interface OrderItemMapper {
     int updateByPrimaryKey(OrderItem record);
 
     List<OrderItem> getByOrderNoUserId(@Param("userId") Integer userId, @Param("orderNo") Long orderNo);
+
+
+    List<OrderItem> getByOrderNo(@Param("orderNo") Long orderNo);
+
+    //todo 加注解的作用？加和不加没区别？
+    void batchInsert(@Param("orderItemList") List<OrderItem> orderItemList);
 }
