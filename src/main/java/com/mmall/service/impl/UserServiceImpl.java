@@ -8,6 +8,7 @@ import com.mmall.dao.UserMapper;
 import com.mmall.pojo.User;
 import com.mmall.service.IUserService;
 import com.mmall.util.MD5Util;
+import com.mmall.util.RedisPoolUtil;
 import net.sf.jsqlparser.schema.Server;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,7 +96,8 @@ public class UserServiceImpl implements IUserService {
         int resultCount = userMapper.checkAnswer(username, password, answer);
         if (resultCount > 0) {
             String forgetToken = UUID.randomUUID().toString();
-            TokenCache.setKey(Const.TOKEN_PREFIX + username, forgetToken);
+//            TokenCache.setKey(Const.TOKEN_PREFIX + username, forgetToken);
+            RedisPoolUtil.setEx(Const.TOKEN_PREFIX + username, forgetToken, 60 * 60 * 12);
             return ServerResponse.createBySuccess(forgetToken);
         }
         return ServerResponse.createByErrorMessage("问题的答案错误");
@@ -109,7 +111,8 @@ public class UserServiceImpl implements IUserService {
         if (validResponse.isSuccess()) {
             return ServerResponse.createByErrorMessage("用户不存在");
         }
-        String token = TokenCache.getKey(Const.TOKEN_PREFIX + username);
+//        String token = TokenCache.getKey(Const.TOKEN_PREFIX + username);
+        String token = RedisPoolUtil.get(Const.TOKEN_PREFIX + username);
         if (StringUtils.isBlank(token)) {
             return ServerResponse.createByErrorMessage("token无效或者过期");
         }
@@ -172,11 +175,12 @@ public class UserServiceImpl implements IUserService {
 
     /**
      * 校验是否是管理员
+     *
      * @param user
      * @return
      */
-    public ServerResponse checkAdminRole(User user){
-        if(user != null && user.getRole().intValue() == Const.role.ROLE_ADMIN){
+    public ServerResponse checkAdminRole(User user) {
+        if (user != null && user.getRole().intValue() == Const.role.ROLE_ADMIN) {
             return ServerResponse.createBySuccess();
         }
         return ServerResponse.createByError();
