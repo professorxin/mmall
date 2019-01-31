@@ -23,7 +23,7 @@ public class SessionExpireFilter implements Filter {
         String loginToken = CookieUtil.readLoginToken(httpServletRequest);
         if (StringUtils.isNotEmpty(loginToken)) {
             String userJsonStr = RedisPoolUtil.get(loginToken);
-            User user = JsonUtil.stringToObj(loginToken, User.class);
+            User user = JsonUtil.stringToObj(userJsonStr, User.class);
             if (user != null) {
                 RedisPoolUtil.expire(loginToken, Const.RedisCacheExtime.REDIS_SESSION_EXTIME);
             }
