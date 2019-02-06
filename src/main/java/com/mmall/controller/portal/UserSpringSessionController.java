@@ -75,7 +75,7 @@ public class UserSpringSessionController {
 //        String userJsonStr = RedisShardedPoolUtil.get(loginToken);
 //        User user = JsonUtil.stringToObj(userJsonStr, User.class);
 
-        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
 
         if (user != null) {
             return ServerResponse.createBySuccess(user);
