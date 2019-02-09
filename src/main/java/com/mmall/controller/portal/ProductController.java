@@ -7,9 +7,7 @@ import com.mmall.vo.ProductDetailVo;
 import com.mmall.vo.ProductListVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/product/")
@@ -26,6 +24,12 @@ public class ProductController {
     @RequestMapping("detail.do")
     @ResponseBody
     public ServerResponse<ProductDetailVo> detail(Integer productId) {
+        return iProductService.getProductDetail(productId);
+    }
+
+    @RequestMapping(value="/{productId}",method = RequestMethod.GET)
+    @ResponseBody
+    public ServerResponse<ProductDetailVo> detailRESTful(@PathVariable Integer productId) {
         return iProductService.getProductDetail(productId);
     }
 
@@ -48,4 +52,38 @@ public class ProductController {
         return iProductService.getProductByKeywordCategory(keyword, categoryId, pageNum, pageSize, orderBy);
 
     }
+
+    @RequestMapping(value="/{keyword}/{categoryId}/{pageNum}/{pageSize}/{orderBy}",method = RequestMethod.GET)
+    @ResponseBody
+    public ServerResponse<PageInfo> listRESTful(@PathVariable(value = "keyword") String keyword,
+                                         @PathVariable(value = "categoryId") Integer categoryId,
+                                         @PathVariable(value = "pageNum") Integer pageNum,
+                                         @PathVariable(value = "pageSize") Integer pageSize,
+                                         @PathVariable(value = "orderBy") String orderBy) {
+        return iProductService.getProductByKeywordCategory(keyword, categoryId, pageNum, pageSize, orderBy);
+
+    }
+
+    @RequestMapping(value="/keyword/{keyword}/{pageNum}/{pageSize}/{orderBy}",method = RequestMethod.GET)
+    @ResponseBody
+    public ServerResponse<PageInfo> listRESTful(@PathVariable(value = "keyword") String keyword,
+                                                @PathVariable(value = "pageNum") Integer pageNum,
+                                                @PathVariable(value = "pageSize") Integer pageSize,
+                                                @PathVariable(value = "orderBy") String orderBy) {
+        return iProductService.getProductByKeywordCategory(keyword, null, pageNum, pageSize, orderBy);
+
+    }
+
+    @RequestMapping(value="/category/{categoryId}/{pageNum}/{pageSize}/{orderBy}",method = RequestMethod.GET)
+    @ResponseBody
+    public ServerResponse<PageInfo> listRESTful(
+                                                @PathVariable(value = "categoryId") Integer categoryId,
+                                                @PathVariable(value = "pageNum") Integer pageNum,
+                                                @PathVariable(value = "pageSize") Integer pageSize,
+                                                @PathVariable(value = "orderBy") String orderBy) {
+        return iProductService.getProductByKeywordCategory(null, categoryId, pageNum, pageSize, orderBy);
+
+    }
+
+
 }
